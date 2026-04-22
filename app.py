@@ -72,3 +72,23 @@ st.write(filtered_df)
 
 # Chart
 st.line_chart(filtered_df.set_index("Year")["Value"])
+
+
+
+# This chart shows the change in forest area (percentage of land)
+# between 2000 and 2020 for each country.
+# Values represent percentage point changes.
+
+st.subheader("Change from 2000 to 2020")
+
+df_2000 = df[df["Year"] == "2000"][["Country", "Value"]]
+df_2020 = df[df["Year"] == "2020"][["Country", "Value"]]
+
+change_df = df_2000.merge(df_2020, on="Country", suffixes=("_2000", "_2020"))
+
+change_df["Change"] = change_df["Value_2020"] - change_df["Value_2000"]
+
+# Top increases
+top_change = change_df.sort_values(by="Change", ascending=False).head(10)
+
+st.bar_chart(top_change.set_index("Country")["Change"])
