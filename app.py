@@ -24,3 +24,17 @@ df.rename(columns={"REF_AREA_LABEL": "Country"}, inplace=True)
 
 # Remove missing values
 df = df.dropna()
+
+
+
+# Year dropdown
+year_selected = st.selectbox("Select Year", sorted(df["Year"].unique()))
+
+# Filter data
+year_data = df[df["Year"] == year_selected]
+
+st.subheader(f"Top 10 Countries by Forest Area (%) in {year_selected}")
+
+top10 = year_data.sort_values(by="Value", ascending=False).head(10)
+
+st.bar_chart(top10.set_index("Country")["Value"])
