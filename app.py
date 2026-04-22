@@ -59,3 +59,16 @@ fig = px.bar(
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
+
+# Dropdown
+country = st.selectbox("Select Country", df["Country"].unique())
+
+# Filter
+filtered_df = df[df["Country"] == country]
+
+# Show data
+st.write(filtered_df)
+
+# Chart
+st.line_chart(filtered_df.set_index("Year")["Value"])
