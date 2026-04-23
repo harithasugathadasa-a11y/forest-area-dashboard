@@ -92,3 +92,65 @@ change_df["Change"] = change_df["Value_2020"] - change_df["Value_2000"]
 top_change = change_df.sort_values(by="Change", ascending=False).head(10)
 
 st.bar_chart(top_change.set_index("Country")["Change"])
+
+
+
+#Shows the global pattern, not just one country
+st.subheader("Average Forest Area Trend (All Countries)")
+
+avg_trend = df.groupby("Year")["Value"].mean()
+
+st.line_chart(avg_trend)
+
+
+
+#Most Decreased country (Forest Area )
+
+st.subheader("Top 10 Decreases in Forest Area (2000–2020)")
+
+bottom_change = change_df.sort_values(by="Change", ascending=True).head(10)
+
+st.bar_chart(bottom_change.set_index("Country")["Change"])
+
+
+
+#Most Increased country (Forest Area )
+st.subheader("Top 10 Increases in Forest Area (2000–2020)")
+
+top_change = change_df.sort_values(by="Change", ascending=False).head(10)
+
+st.bar_chart(top_change.set_index("Country")["Change"])
+
+
+
+
+
+#To shows how forest area percentages change across countries over different years using colors.
+st.subheader("Heatmap: Forest Area by Country and Year")
+
+# Choose countries
+selected_countries = st.multiselect(
+    "Select Countries",
+    df["Country"].unique(),
+    default=df["Country"].unique()[:10]
+)
+
+# Filter selected countries
+heatmap_df = df[df["Country"].isin(selected_countries)]
+
+
+heatmap_data = heatmap_df.pivot_table(
+    index="Country",
+    columns="Year",
+    values="Value"
+)
+
+fig = px.imshow(
+    heatmap_data,
+    labels=dict(x="Year", y="Country", color="Forest Area %"),
+    aspect="auto",
+    color_continuous_scale="Reds",
+    title="Forest Area Heatmap"
+)
+
+st.plotly_chart(fig, use_container_width=True)
