@@ -154,3 +154,23 @@ fig = px.imshow(
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+
+
+# Shows how forest area percentages are distributed across all countries for each year using a box plot.
+# Helps identify median values, spread, and overall variation between countries.
+st.subheader("Global Distribution of Forest Area by Year")
+
+fig = px.box(
+    df,
+    x="Year",
+    y="Value",
+    points="outliers",
+    color="Year",
+    title="Forest Area Distribution Across Countries"
+)
+
+st.plotly_chart(fig, use_container_width=True)
