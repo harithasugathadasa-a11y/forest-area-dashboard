@@ -121,41 +121,6 @@ st.bar_chart(top_change.set_index("Country")["Change"])
 
 
 
-#To shows how forest area percentages change across countries over different years using colors.
-st.subheader("Heatmap: Forest Area by Country and Year")
-
-# Choose countries
-selected_countries = st.multiselect(
-    "Select Countries",
-    df["Country"].unique(),
-    default=df["Country"].unique()[:10]
-)
-
-# Filter selected countries
-heatmap_df = df[df["Country"].isin(selected_countries)]
-
-
-heatmap_data = heatmap_df.pivot_table(
-    index="Country",
-    columns="Year",
-    values="Value"
-)
-
-fig = px.imshow(
-    heatmap_data,
-    labels=dict(x="Year", y="Country", color="Forest Area %"),
-    aspect="auto",
-    color_continuous_scale="Reds",
-    title="Forest Area Heatmap"
-)
-
-st.plotly_chart(fig, use_container_width=True)
-
-
-
-
-
-
 # Shows how forest area percentages are distributed across all countries for each year using a box plot.
 # Helps identify median values, spread, and overall variation between countries.
 st.subheader("Global Distribution of Forest Area by Year")
@@ -167,6 +132,48 @@ fig = px.box(
     points="outliers",
     color="Year",
     title="Forest Area Distribution Across Countries"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+
+
+
+
+
+
+# World Map (2000-2020 Heatmap)
+
+st.subheader("🌍 World Map: Forest Area Change (2000–2020)")
+
+# Prepare change data
+df_2000 = df[df["Year"] == "2000"][["Country", "Value"]]
+df_2020 = df[df["Year"] == "2020"][["Country", "Value"]]
+
+change_df = df_2000.merge(df_2020, on="Country", suffixes=("_2000", "_2020"))
+change_df["Change"] = change_df["Value_2020"] - change_df["Value_2000"]
+
+# Create map
+fig = px.choropleth(
+    change_df,
+    locations="Country",
+    locationmode="country names",
+    color="Change",
+    hover_name="Country",
+    hover_data={
+        "Change": True,
+        "Country": False
+    },
+    color_continuous_scale="RdYlGn",
+    title="Forest Area Change by Country (2000–2020)"
+)
+
+fig.update_layout(
+    geo=dict(showframe=False, showcoastlines=True),
+    margin=dict(l=0, r=0, t=50, b=0)
 )
 
 st.plotly_chart(fig, use_container_width=True)
