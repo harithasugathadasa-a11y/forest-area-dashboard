@@ -37,26 +37,6 @@ st.bar_chart(top10.set_index("Country")["Value"])
 
 
 
-st.subheader("Country Comparison")
-
-year_selected = st.selectbox("Select Year for Comparison", df["Year"].unique())
-
-year_data = df[df["Year"] == year_selected]
-
-year_data = year_data.sort_values(by="Value", ascending=False)
-
-fig = px.bar(
-    year_data.head(30),
-    x="Value",
-    y="Country",
-    orientation="h",
-    title=f"Country Comparison - {year_selected}",
-    height=1200
-)
-
-st.plotly_chart(fig, use_container_width=True)
-
-
 # Dropdown
 country = st.selectbox("Select Country", df["Country"].unique())
 
@@ -135,10 +115,6 @@ fig = px.box(
 )
 
 st.plotly_chart(fig, use_container_width=True)
-
-
-
-
 
 
 
